@@ -2,6 +2,7 @@ const express = require('express');
 const https = require('https');
 const bodyParser = require('body-parser');
 const request = require('request');
+require('dotenv').config();
 
 
 const app = express();
@@ -12,7 +13,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static('public'));
 
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
+  res.sendFile(__dirname + '/signup.html');
 });
 
 app.post('/', (req, res) => {
@@ -38,13 +39,21 @@ app.post('/', (req, res) => {
   const jsonData = JSON.stringify(data);
 
   const url = 'https://us21.api.mailchimp.com/3.0/lists/d41d7d529d';
+  const apiKey = process.env.API_KEY;
   
   const options = {
     method: 'POST',
-    auth: 'flash:4b9cbbc191737500ac8b8adc53601bab-us21'
+    auth: `flash:${apiKey}`
   }
 
   const request = https.request(url, options, (response) => {
+
+    if(response.statusCode === 200) {
+      res.sendFile(__dirname + '/success.html');
+    } else {
+      res.sendFile(__dirname + '/failure.html');
+    }
+
     response.on('data', (data) => {
       console.log(JSON.parse(data));
     });
@@ -55,9 +64,9 @@ app.post('/', (req, res) => {
 
 });
 
-//API-KEY = 4b9cbbc191737500ac8b8adc53601bab-us21
-// Audience ID = d41d7d529d
-
+app.post('/failure', (req, res) => {
+  res.redirect('/');
+})
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
