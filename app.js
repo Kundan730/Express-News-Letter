@@ -43,7 +43,7 @@ app.post('/', (req, res) => {
   
   const options = {
     method: 'POST',
-    auth: `flash:${apiKey}`
+    auth: `Flash:${apiKey}`
   }
 
   const request = https.request(url, options, (response) => {
