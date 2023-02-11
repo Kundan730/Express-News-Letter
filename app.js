@@ -39,11 +39,11 @@ app.post('/', (req, res) => {
   const jsonData = JSON.stringify(data);
 
   const url = 'https://us21.api.mailchimp.com/3.0/lists/d41d7d529d';
-  const apiKey = 'ff102db0f0fd3e671cace05bed72b4f2-us21';
+  const apiKey = process.env.API_KEY;
   
   const options = {
     method: 'POST',
-    auth: `flash:ff102db0f0fd3e671cace05bed72b4f2-us21`
+    auth: `flash:${apiKey}`
   }
 
   const request = https.request(url, options, (response) => {
